@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #2563eb;
+            margin-top: 0;
+        }
+        .success {
+            color: #10b981;
+            font-weight: bold;
+        }
+        .info {
+            background-color: #e0f2fe;
+            border-left: 4px solid #3b82f6;
+            padding: 10px 15px;
+            margin: 20px 0;
+        }
+        code {
+            background-color: #e5e7eb;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .button {
+            display: inline-block;
+            background-color: #2563eb;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+        .button:hover {
+            background-color: #1d4ed8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Local Server Test</h1>
+        <p class="success">✓ Server is running correctly!</p>
+        
+        <div class="info">
+            <p>Your local development server is working properly. You can now access the Client Portal application.</p>
+        </div>
+        
+        <h2>Available Pages:</h2>
+        <ul>
+            <li><a href="index.html">Login Page</a> - The main entry point for the application</li>
+            <li><a href="main.html">Dashboard</a> - The protected dashboard page (requires login)</li>
+            <li><a href="fleet-test.html">Fleet Analysis Test</a> - Test page for the Fleet Analysis PowerBI dashboard</li>
+            <li><a href="alert-test.html">Fleet Alert Test</a> - Test page for the Fleet Alert indicator</li>
+        </ul>
+        
+        <h2>Proxy Server:</h2>
+        <p>This application requires a proxy server to handle API requests and avoid CORS issues.</p>
+        <div class="info">
+            <p>To run the proxy server, open a new terminal and run:</p>
+            <code>npm run proxy</code>
+            <p>Or run both servers together with:</p>
+            <code>npm run full</code>
+            <p>Current server configuration:</p>
+            <ul>
+                <li>Proxy server: <code>http://localhost:3000</code></li>
+                <li>Static file server (start): <code>http://localhost:8080</code></li>
+                <li>Static file server (dev): <code>http://localhost:8081</code></li>
+            </ul>
+        </div>
+        
+        <h2>Proxy Server Status:</h2>
+        <div id="proxy-status">Checking proxy server status...</div>
+        
+        <h2>How to Use:</h2>
+        <ol>
+            <li>Go to the <a href="index.html">Login Page</a></li>
+            <li>Enter your credentials (email and password)</li>
+            <li>After successful authentication, you'll be redirected to the dashboard</li>
+        </ol>
+        
+        <p>Server is running on: <code id="server-url">http://localhost:8080</code></p>
+        
+        <a href="index.html" class="button">Go to Client Portal</a>
+    </div>
+
+    <script>
+        // Display the actual server URL
+        document.getElementById('server-url').textContent = window.location.origin;
+        
+        // Check if proxy server is running
+        async function checkProxyServer() {
+            const proxyStatus = document.getElementById('proxy-status');
+            try {
+                const response = await fetch('http://localhost:3000/api/health');
+                if (response.ok) {
+                    const data = await response.json();
+                    proxyStatus.innerHTML = `
+                        <p class="success">✓ Proxy server is running</p>
+                        <p>Status: ${data.status}</p>
+                        <p>Target API: ${data.api_target}</p>
+                        <p>Last checked: ${new Date().toLocaleTimeString()}</p>
+                    `;
+                } else {
+                    proxyStatus.innerHTML = `
+                        <p style="color: #ef4444; font-weight: bold;">✗ Proxy server returned an error</p>
+                        <p>Status code: ${response.status}</p>
+                        <p>Please check the server logs for more information.</p>
+                    `;
+                }
+            } catch (error) {
+                proxyStatus.innerHTML = `
+                    <p style="color: #ef4444; font-weight: bold;">✗ Proxy server is not running</p>
+                    <p>Error: ${error.message}</p>
+                    <p>Please start the proxy server with:</p>
+                    <code>npm run proxy</code>
+                `;
+            }
+        }
+        
+        // Check proxy server status when page loads
+        checkProxyServer();
+        
+        // Check proxy server status every 10 seconds
+        setInterval(checkProxyServer, 10000);
+    </script>
+</body>
+</html>

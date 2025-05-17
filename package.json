@@ -1,0 +1,29 @@
+{
+  "name": "client-portal",
+  "version": "1.0.0",
+  "description": "A simple client portal application",
+  "main": "index.html",
+  "scripts": {
+    "start": "http-server -p 8080 -c-1 -o /server-test.html",
+    "dev": "http-server -p 8081 -c-1",
+    "proxy": "node server.js",
+    "full": "concurrently \"npm run proxy\" \"http-server -p 8081 -c-1\"",
+    "simple": "http-server -a 127.0.0.1 -p 8080 -c-1"
+  },
+  "keywords": [
+    "client",
+    "portal",
+    "authentication"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "http-server": "^14.1.1"
+  },
+  "dependencies": {
+    "axios": "^1.9.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0"
+  }
+}

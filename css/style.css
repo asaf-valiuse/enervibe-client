@@ -1,0 +1,216 @@
+/**
+ * Custom styles for Client Portal
+ * Additional styles not covered by TailwindCSS
+ */
+
+/* Smooth transitions */
+.transition-colors {
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+/* Custom focus styles */
+input:focus, 
+button:focus {
+    outline: none;
+}
+
+/* Custom scrollbar for modern browsers */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c5c5c5;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Fade-in animation for dashboard content */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+#dashboard-content.fadeIn {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Pulse animation for notifications */
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.02); opacity: 0.9; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+/* Alert indicator styles */
+#fleet-alert-container {
+    transition: all 0.3s ease-in-out;
+}
+
+#fleet-alert-container.pulse {
+    animation: pulse 2s infinite;
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
+}
+
+/* Sidebar Navigation Styles */
+.sidebar-expanded {
+    width: 240px;
+}
+
+.sidebar-collapsed {
+    width: 64px;
+}
+
+.sidebar-collapsed .sidebar-text {
+    display: none;
+}
+
+/* Tooltip for collapsed sidebar */
+.sidebar-collapsed .nav-link {
+    position: relative;
+}
+
+.sidebar-collapsed .nav-link:hover::after {
+    content: attr(data-title);
+    position: absolute;
+    left: 100%;
+    top: 0;
+    margin-left: 5px;
+    background: #333;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    white-space: nowrap;
+    z-index: 20;
+}
+
+/* Main content adjustment based on sidebar state */
+.sidebar-expanded ~ #main-content {
+    margin-left: 240px;
+}
+
+.sidebar-collapsed ~ #main-content {
+    margin-left: 64px;
+}
+
+/* Active navigation link */
+.nav-link.active {
+    background-color: #EBF5FF;
+    color: #3B82F6;
+    font-weight: 500;
+}
+
+/* Content sections */
+.content-section {
+    display: none;
+}
+
+.content-section.active {
+    display: block;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Custom styles for mobile view */
+@media (max-width: 768px) {
+    .sidebar-expanded,
+    .sidebar-collapsed {
+        transform: translateX(-100%);
+        position: fixed;
+        z-index: 40;
+    }
+    
+    .sidebar-mobile-open {
+        transform: translateX(0);
+        box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .sidebar-expanded ~ #main-content,
+    .sidebar-collapsed ~ #main-content {
+        margin-left: 0;
+    }
+    
+    .mobile-padding {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+/* PowerBI iframe container */
+.powerbi-container {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    padding: 0;
+    height: calc(100vh - 120px); /* Adjust height to fill available space */
+}
+
+/* Fleet Analysis section specific styles */
+.fleet-section {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+}
+
+/* Adjust main content padding for Fleet Analysis */
+#main-content:has(.fleet-section.active) {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+#powerbi-iframe {
+    min-width: 800px; /* Minimum width to ensure dashboard is usable */
+    max-width: 100%;
+    border: none;
+    height: 100%; /* Make iframe fill the container height */
+    display: block; /* Remove any extra space below iframe */
+}
+
+/* Lazy loading for iframe */
+.iframe-lazy-load {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.iframe-lazy-load.loaded {
+    opacity: 1;
+}
+
+/* Print styles */
+@media print {
+    body {
+        background-color: white;
+    }
+    
+    nav, footer, button, #sidebar {
+        display: none !important;
+    }
+    
+    main {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    
+    .bg-white, .bg-gray-50, .bg-gray-100 {
+        background-color: white !important;
+        box-shadow: none !important;
+    }
+    
+    .text-gray-500, .text-gray-600, .text-gray-700 {
+        color: black !important;
+    }
+}

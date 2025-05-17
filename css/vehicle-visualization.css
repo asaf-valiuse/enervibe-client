@@ -1,0 +1,246 @@
+/**
+ * Vehicle Visualization Styles
+ * Custom styles for the vehicle visualization page
+ */
+
+/* SVG Styles */
+#vehicle-svg {
+    background-color: #f9fafb;
+    border-radius: 0.375rem;
+    transition: all 0.3s ease;
+}
+
+/* Vehicle Body Styles */
+.vehicle-body {
+    fill: #e5e7eb;
+    stroke: #6b7280;
+    stroke-width: 2;
+}
+
+/* Custom SVG styles */
+#Axle1Right, #Axle2Right, #Axel2-left, #Axel1Left {
+    fill: none;
+    stroke: #042433;
+    stroke-width: 6.875;
+}
+
+image.vehicle-body {
+    fill: none;
+    stroke: none;
+}
+
+.vehicle-cabin {
+    fill: #d1d5db;
+    stroke: #6b7280;
+    stroke-width: 1.5;
+}
+
+.vehicle-window {
+    fill: #93c5fd;
+    stroke: #3b82f6;
+    stroke-width: 1;
+}
+
+.vehicle-light {
+    stroke-width: 1;
+}
+
+.vehicle-light.front {
+    fill: #fcd34d;
+    stroke: #f59e0b;
+}
+
+.vehicle-light.rear {
+    fill: #ef4444;
+    stroke: #b91c1c;
+}
+
+.vehicle-connector {
+    fill: #6b7280;
+    stroke: #4b5563;
+    stroke-width: 1.5;
+}
+
+/* Axle Styles */
+.axle-line {
+    stroke: #4b5563;
+    stroke-width: 3;
+    stroke-linecap: round;
+}
+
+.axle-number {
+    font-size: 12px;
+    font-weight: bold;
+    fill: #4b5563;
+    text-anchor: middle;
+    dominant-baseline: middle;
+}
+
+/* Wheel Styles */
+.wheel {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.wheel-outer {
+    stroke-width: 2;
+}
+
+.wheel-inner {
+    fill: #9ca3af;
+    stroke: #6b7280;
+    stroke-width: 1;
+}
+
+.wheel-label {
+    font-size: 10px;
+    font-weight: bold;
+    fill: #1f2937;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    pointer-events: none;
+}
+
+/* Wheel Status Styles */
+.wheel.status-normal .wheel-outer {
+    fill: #d1fae5;
+    stroke: #10b981;
+}
+
+.wheel.status-warning .wheel-outer {
+    fill: #fef3c7;
+    stroke: #f59e0b;
+}
+
+.wheel.status-critical .wheel-outer {
+    fill: #fee2e2;
+    stroke: #ef4444;
+}
+
+.wheel.status-nodata .wheel-outer {
+    fill: #f3f4f6;
+    stroke: #9ca3af;
+    stroke-dasharray: 4 2;
+}
+
+/* Wheel Hover & Selected States */
+.wheel:hover .wheel-outer {
+    filter: brightness(0.95);
+    transform: scale(1.05);
+}
+
+.wheel.selected .wheel-outer {
+    filter: brightness(0.9);
+    transform: scale(1.1);
+    stroke-width: 3;
+}
+
+.wheel:hover .wheel-label,
+.wheel.selected .wheel-label {
+    font-weight: bold;
+    font-size: 11px;
+}
+
+/* Tooltip Styles */
+.wheel-tooltip {
+    position: absolute;
+    background-color: rgba(17, 24, 39, 0.9);
+    color: white;
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
+    z-index: 50;
+    pointer-events: none;
+    max-width: 200px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.wheel-tooltip.visible {
+    opacity: 1;
+}
+
+.wheel-tooltip-title {
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 0.25rem;
+}
+
+.wheel-tooltip-content {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.25rem 0.5rem;
+}
+
+.wheel-tooltip-label {
+    color: #d1d5db;
+}
+
+/* Zoom Controls */
+.zoom-controls {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.zoom-control-button {
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.375rem;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #4b5563;
+    transition: all 0.2s ease;
+}
+
+.zoom-control-button:hover {
+    background-color: #f3f4f6;
+    color: #1f2937;
+}
+
+/* Animation for status changes */
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.9; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.wheel.pulse .wheel-outer {
+    animation: pulse 1s ease-in-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    #visualization-container {
+        height: 300px;
+    }
+    
+    .wheel-label {
+        font-size: 8px;
+    }
+    
+    .axle-number {
+        font-size: 10px;
+    }
+}
+
+/* Print styles */
+@media print {
+    #visualization-container {
+        height: auto;
+        page-break-inside: avoid;
+    }
+    
+    #vehicle-svg {
+        background-color: white;
+    }
+}

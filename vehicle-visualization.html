@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Visualization - Client Portal</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Vehicle visualization specific styles -->
+    <link rel="stylesheet" href="css/vehicle-visualization.css">
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Top Navigation -->
+    <nav class="bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center">
+                        <h1 class="text-xl font-bold text-blue-600">Client Portal</h1>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="hidden md:ml-4 md:flex-shrink-0 md:flex md:items-center">
+                        <!-- Profile dropdown -->
+                        <div class="ml-3 relative">
+                            <div class="flex items-center">
+                                <div class="text-right mr-3">
+                                    <div id="user-name" class="text-sm font-medium text-gray-700">Loading...</div>
+                                    <div id="user-email" class="text-xs text-gray-500">Please wait</div>
+                                </div>
+                                <button id="profile-button" class="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" id="user-menu" aria-expanded="false" aria-haspopup="true">
+                                    <span class="sr-only">Open user menu</span>
+                                    <div class="h-8 w-8 rounded-full bg-blue-600 flex items-center justify-center text-white">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                </button>
+                            </div>
+                            <!-- Profile dropdown panel (hidden by default) -->
+                            <div id="profile-dropdown" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Your Profile</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Settings</a>
+                                <a href="#" id="logout-button" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Sign out</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Mobile menu button -->
+                    <div class="flex items-center md:hidden">
+                        <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500">
+                            <span class="sr-only">Open main menu</span>
+                            <i class="fas fa-bars"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile menu, show/hide based on menu state -->
+        <div id="mobile-menu" class="hidden md:hidden">
+            <div class="pt-4 pb-3 border-t border-gray-200">
+                <div class="flex items-center px-4">
+                    <div class="flex-shrink-0">
+                        <div class="h-10 w-10 rounded-full bg-blue-600 flex items-center justify-center text-white">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    </div>
+                    <div class="ml-3">
+                        <div id="mobile-user-name" class="text-base font-medium text-gray-800">Loading...</div>
+                        <div id="mobile-user-email" class="text-sm font-medium text-gray-500">Please wait</div>
+                    </div>
+                </div>
+                <div class="mt-3 space-y-1">
+                    <a href="#" class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">Your Profile</a>
+                    <a href="#" class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">Settings</a>
+                    <a href="#" id="mobile-logout-button" class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">Sign out</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex h-screen pt-16">
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="sidebar-expanded bg-white shadow-md fixed top-16 left-0 h-full z-10 transition-all duration-300">
+            <!-- Toggle button -->
+            <button id="sidebar-toggle" class="absolute -right-3 top-10 bg-white rounded-full p-1 shadow-md border border-gray-200 text-gray-500 hover:text-blue-600 focus:outline-none">
+                <i id="sidebar-toggle-icon" class="fas fa-chevron-left"></i>
+            </button>
+            
+            <!-- Navigation menu -->
+            <nav class="py-4 px-4 h-full">
+                <ul class="space-y-2">
+                    <!-- Dashboard -->
+                    <li>
+                        <a href="main.html#dashboard" class="nav-link flex items-center p-2 rounded-md text-gray-700 hover:bg-blue-50 hover:text-blue-700" data-section="dashboard">
+                            <i class="fas fa-tachometer-alt w-6 text-center"></i>
+                            <span class="sidebar-text ml-3">Main Dashboard</span>
+                        </a>
+                    </li>
+                    
+                    <!-- User Management -->
+                    <li>
+                        <a href="main.html#users" class="nav-link flex items-center p-2 rounded-md text-gray-700 hover:bg-blue-50 hover:text-blue-700" data-section="users">
+                            <i class="fas fa-users w-6 text-center"></i>
+                            <span class="sidebar-text ml-3">User Management</span>
+                        </a>
+                    </li>
+                    
+                    <!-- Vehicle Management -->
+                    <li>
+                        <a href="main.html#vehicles" class="nav-link flex items-center p-2 rounded-md text-gray-700 hover:bg-blue-50 hover:text-blue-700" data-section="vehicles">
+                            <i class="fas fa-car w-6 text-center"></i>
+                            <span class="sidebar-text ml-3">Vehicle Management</span>
+                        </a>
+                    </li>
+                    
+                    <!-- Fleet Analysis -->
+                    <li>
+                        <a href="main.html#fleet" class="nav-link flex items-center p-2 rounded-md text-gray-700 hover:bg-blue-50 hover:text-blue-700" data-section="fleet">
+                            <i class="fas fa-chart-bar w-6 text-center"></i>
+                            <span class="sidebar-text ml-3">Fleet Analysis</span>
+                        </a>
+                    </li>
+                    
+                    <!-- Vehicle Visualization -->
+                    <li>
+                        <a href="vehicle-visualization.html" class="nav-link active flex items-center p-2 rounded-md text-blue-700 bg-blue-50" data-section="visualization">
+                            <i class="fas fa-truck w-6 text-center"></i>
+                            <span class="sidebar-text ml-3">Vehicle Visualization</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main content -->
+        <main id="main-content" class="flex-1 transition-all duration-300 py-6 px-4 sm:px-6 lg:px-8">
+            <!-- Loading spinner (shown while data is loading) -->
+            <div id="loading-spinner" class="flex justify-center my-12">
+                <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            </div>
+
+            <!-- Error message (hidden by default) -->
+            <div id="error-container" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mx-4 mb-6">
+                <div class="flex">
+                    <div class="py-1">
+                        <i class="fas fa-exclamation-circle mr-2"></i>
+                    </div>
+                    <div>
+                        <p id="error-message">Error loading data.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vehicle Visualization content -->
+            <div id="visualization-content">
+                <div class="px-4 sm:px-0">
+                    <h2 class="text-2xl font-semibold text-gray-900">Vehicle Visualization</h2>
+                    <p class="mt-1 text-sm text-gray-600">
+                        Interactive visualization of vehicle types, axles, and wheels.
+                    </p>
+                </div>
+
+                <!-- Vehicle Selection Panel -->
+                <div class="mt-6 grid grid-cols-1 gap-5 md:grid-cols-4">
+                    <!-- Vehicle Type Selection -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="px-4 py-5 sm:p-6">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">Vehicle Type</h3>
+                            <div class="space-y-2">
+                                <div class="flex items-center">
+                                    <input type="radio" id="vehicle-type-truck" name="vehicle-type" value="truck" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" checked>
+                                    <label for="vehicle-type-truck" class="ml-3 block text-sm font-medium text-gray-700">
+                                        Truck (Type A)
+                                    </label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="radio" id="vehicle-type-tractor" name="vehicle-type" value="tractor" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                    <label for="vehicle-type-tractor" class="ml-3 block text-sm font-medium text-gray-700">
+                                        Tractor (Type B)
+                                    </label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="radio" id="vehicle-type-trailer" name="vehicle-type" value="trailer" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                    <label for="vehicle-type-trailer" class="ml-3 block text-sm font-medium text-gray-700">
+                                        Trailer (Type C)
+                                    </label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="radio" id="vehicle-type-combined" name="vehicle-type" value="combined" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                    <label for="vehicle-type-combined" class="ml-3 block text-sm font-medium text-gray-700">
+                                        Tractor-Trailer
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Vehicle Configuration -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg md:col-span-3">
+                        <div class="px-4 py-5 sm:p-6">
+                            <h3 class="text-lg font-medium text-gray-900 mb-4">Vehicle Configuration</h3>
+                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                                <!-- Axle Count -->
+                                <div>
+                                    <label for="axle-count" class="block text-sm font-medium text-gray-700">Number of Axles</label>
+                                    <select id="axle-count" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                                        <option value="1">1 Axle</option>
+                                        <option value="2" selected>2 Axles</option>
+                                        <option value="3">3 Axles</option>
+                                        <option value="4">4 Axles</option>
+                                        <option value="5">5 Axles</option>
+                                        <option value="6">6 Axles</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Wheel Configuration -->
+                                <div>
+                                    <label for="wheel-config" class="block text-sm font-medium text-gray-700">Wheel Configuration</label>
+                                    <select id="wheel-config" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                                        <option value="single" selected>Single Wheels</option>
+                                        <option value="dual">Dual Wheels</option>
+                                        <option value="mixed">Mixed Configuration</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Status Simulation -->
+                                <div>
+                                    <label for="status-simulation" class="block text-sm font-medium text-gray-700">Status Simulation</label>
+                                    <select id="status-simulation" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                                        <option value="all-normal" selected>All Normal</option>
+                                        <option value="random-warnings">Random Warnings</option>
+                                        <option value="random-critical">Random Critical</option>
+                                        <option value="mixed">Mixed Status</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <button id="update-visualization" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                    <i class="fas fa-sync-alt mr-2"></i>
+                                    Update Visualization
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visualization Canvas -->
+                <div class="mt-6 bg-white shadow overflow-hidden sm:rounded-lg">
+                    <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Vehicle Diagram</h3>
+                        <div class="flex space-x-2">
+                            <button id="zoom-in" class="p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-search-plus"></i>
+                            </button>
+                            <button id="zoom-out" class="p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-search-minus"></i>
+                            </button>
+                            <button id="reset-view" class="p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-sync"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="border-t border-gray-200">
+                        <div id="visualization-container" class="p-4 h-96 overflow-auto">
+                            <!-- SVG will be inserted here by JavaScript -->
+                            <svg id="vehicle-svg" width="100%" height="100%" viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet">
+                                <g id="vehicle-group" transform="translate(0,0) scale(1)">
+                                    <!-- Vehicle will be rendered here -->
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Wheel Information Panel -->
+                <div class="mt-6 bg-white shadow overflow-hidden sm:rounded-lg">
+                    <div class="px-4 py-5 sm:px-6">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Wheel Information</h3>
+                        <p class="mt-1 max-w-2xl text-sm text-gray-500">Click on a wheel in the visualization to see details.</p>
+                    </div>
+                    <div class="border-t border-gray-200">
+                        <div id="wheel-info-container" class="p-4">
+                            <div id="wheel-info-placeholder" class="text-center text-gray-500 py-8">
+                                <i class="fas fa-info-circle text-2xl mb-2"></i>
+                                <p>Select a wheel to view its information</p>
+                            </div>
+                            <div id="wheel-info-details" class="hidden">
+                                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                    <div>
+                                        <h4 class="text-md font-medium text-gray-900 mb-2">Wheel Details</h4>
+                                        <dl>
+                                            <div class="bg-gray-50 px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4">
+                                                <dt class="text-sm font-medium text-gray-500">Identifier</dt>
+                                                <dd id="wheel-id" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">-</dd>
+                                            </div>
+                                            <div class="bg-white px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4">
+                                                <dt class="text-sm font-medium text-gray-500">Axle</dt>
+                                                <dd id="wheel-axle" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">-</dd>
+                                            </div>
+                                            <div class="bg-gray-50 px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4">
+                                                <dt class="text-sm font-medium text-gray-500">Position</dt>
+                                                <dd id="wheel-position" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">-</dd>
+                                            </div>
+                                            <div class="bg-white px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4">
+                                                <dt class="text-sm font-medium text-gray-500">Status</dt>
+                                                <dd id="wheel-status" class="mt-1 text-sm sm:mt-0 sm:col-span-2">-</dd>
+                                            </div>
+                                        </dl>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-md font-medium text-gray-900 mb-2">Sensor Data</h4>
+                                        <dl>
+                                            <div class="bg-gray-50 px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4">
+                                                <dt class="text-sm font-medium text-gray-500">Temperature</dt>
+                                                <dd id="wheel-temperature" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">-</dd>
+                                            </div>
+                                            <div class="bg-white px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4">
+                                                <dt class="text-sm font-medium text-gray-500">Pressure</dt>
+                                                <dd id="wheel-pressure" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">-</dd>
+                                            </div>
+                                            <div class="bg-gray-50 px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4">
+                                                <dt class="text-sm font-medium text-gray-500">Last Updated</dt>
+                                                <dd id="wheel-last-updated" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">-</dd>
+                                            </div>
+                                            <div class="bg-white px-4 py-2 sm:grid sm:grid-cols-3 sm:gap-4">
+                                                <dt class="text-sm font-medium text-gray-500">Battery</dt>
+                                                <dd id="wheel-battery" class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">-</dd>
+                                            </div>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status Legend -->
+                <div class="mt-6 bg-white shadow overflow-hidden sm:rounded-lg">
+                    <div class="px-4 py-5 sm:px-6">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Status Legend</h3>
+                    </div>
+                    <div class="border-t border-gray-200">
+                        <div class="p-4">
+                            <div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+                                <div class="flex items-center">
+                                    <div class="w-6 h-6 rounded-full bg-green-100 border-2 border-green-500 mr-2"></div>
+                                    <span class="text-sm text-gray-700">Normal</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="w-6 h-6 rounded-full bg-yellow-100 border-2 border-yellow-500 mr-2"></div>
+                                    <span class="text-sm text-gray-700">Warning</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="w-6 h-6 rounded-full bg-red-100 border-2 border-red-500 mr-2"></div>
+                                    <span class="text-sm text-gray-700">Critical</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="w-6 h-6 rounded-full bg-gray-100 border-2 border-gray-400 border-dashed mr-2"></div>
+                                    <span class="text-sm text-gray-700">No Data</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white mt-auto">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <div class="border-t border-gray-200 pt-4">
+                <p class="text-sm text-gray-500 text-center">&copy; 2025 Client Portal. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script type="module" src="js/config.js"></script>
+    <script type="module" src="js/vehicle-visualization.js"></script>
+    <script type="module" src="js/navigation.js"></script>
+</body>
+</html>

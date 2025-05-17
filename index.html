@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Portal - Login</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'enervibe-blue': '#005a9c',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Logo in top-left corner -->
+    <div class="absolute top-4 left-4">
+        <img src="images/enervibe_logo.png" alt="Enervibe Logo" class="h-12">
+    </div>
+    
+    <div class="min-h-screen flex items-center justify-center">
+        <div class="w-full max-w-md">
+        <!-- Logo and branding -->
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-bold text-enervibe-blue">Client Portal</h1>
+            <p class="text-gray-600 mt-2">Access your account</p>
+        </div>
+
+        <!-- Login form -->
+        <div class="bg-white rounded-lg shadow-lg p-8">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">Sign In</h2>
+            
+            <!-- Error message container (hidden by default) -->
+            <div id="errorMessage" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                <span id="error-text"></span>
+            </div>
+            
+            <form id="loginForm">
+                <!-- Email input -->
+                <div class="mb-6">
+                    <label for="username" class="block text-gray-700 text-sm font-medium mb-2">Email Address</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-envelope text-gray-400"></i>
+                        </div>
+                        <input type="email" id="username" name="username" required
+                            class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-enervibe-blue focus:border-enervibe-blue transition-colors"
+                            placeholder="your@email.com">
+                    </div>
+                </div>
+                
+                <!-- Password input -->
+                <div class="mb-6">
+                    <label for="password" class="block text-gray-700 text-sm font-medium mb-2">Password</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-lock text-gray-400"></i>
+                        </div>
+                        <input type="password" id="password" name="password" required
+                            class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-enervibe-blue focus:border-enervibe-blue transition-colors"
+                            placeholder="••••••••">
+                    </div>
+                </div>
+                
+                <!-- Remember me checkbox -->
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="remember" name="remember" class="h-4 w-4 text-enervibe-blue focus:ring-enervibe-blue border-gray-300 rounded">
+                        <label for="remember" class="ml-2 block text-sm text-gray-700">Remember me</label>
+                    </div>
+                    <div class="text-sm">
+                        <a href="#" class="font-medium text-enervibe-blue hover:text-blue-800 transition-colors">Forgot password?</a>
+                    </div>
+                </div>
+                
+                <!-- Submit button -->
+                <div>
+                    <button type="submit" id="login-button" 
+                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-enervibe-blue hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-enervibe-blue transition-colors">
+                        <span id="button-text">Sign In</span>
+                        <span id="button-spinner" class="hidden ml-2">
+                            <i class="fas fa-circle-notch fa-spin"></i>
+                        </span>
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Footer -->
+        <div class="text-center mt-6">
+            <p class="text-sm text-gray-600">
+                &copy; 2025 Client Portal. All rights reserved.
+            </p>
+        </div>
+    </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script type="module" src="js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fleet Alert Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        .header {
+            background-color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .content {
+            padding: 2rem;
+        }
+        .nav-button {
+            margin-right: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: #3b82f6;
+            color: white;
+            border-radius: 0.25rem;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .nav-button:hover {
+            background-color: #2563eb;
+        }
+        .test-button {
+            padding: 0.5rem 1rem;
+            background-color: #10b981;
+            color: white;
+            border-radius: 0.25rem;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .test-button:hover {
+            background-color: #059669;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="text-xl font-bold text-blue-600">Fleet Alert Test</h1>
+        <div>
+            <a href="server-test.html" class="nav-button">
+                <i class="fas fa-arrow-left"></i> Back to Server Test
+            </a>
+            <a href="fleet-test.html" class="nav-button">
+                <i class="fas fa-chart-bar"></i> Fleet Analysis
+            </a>
+        </div>
+    </div>
+    
+    <div class="content">
+        <h2 class="text-2xl font-semibold mb-4">Test Fleet Alert Indicator</h2>
+        
+        <div class="mb-6">
+            <p class="mb-4">This page allows you to test the fleet alert indicator functionality without requiring authentication.</p>
+            <button id="show-alert-button" class="test-button mb-2">
+                <i class="fas fa-bell"></i> Show Fleet Alert
+            </button>
+            <button id="hide-alert-button" class="test-button bg-red-500 hover:bg-red-600 ml-2">
+                <i class="fas fa-times"></i> Hide Fleet Alert
+            </button>
+        </div>
+        
+        <!-- Alert indicator -->
+        <div id="fleet-alert-container" class="mt-4 hidden">
+            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 flex items-center" role="alert">
+                <div class="flex-shrink-0 mr-3">
+                    <i class="fas fa-exclamation-triangle text-red-500"></i>
+                </div>
+                <div>
+                    <p class="font-bold">Fleet Alerts</p>
+                    <p id="fleet-alert-message">There are <span id="fleet-alert-count" class="font-bold">3</span> active alerts for vehicles in your fleet.</p>
+                </div>
+                <div class="ml-auto">
+                    <a href="#fleet" class="text-sm text-red-700 hover:text-red-900 font-medium underline">View Details</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-8">
+            <h3 class="text-xl font-semibold mb-2">Alert Count</h3>
+            <div class="flex items-center">
+                <input type="number" id="alert-count-input" min="1" max="10" value="3" class="border border-gray-300 rounded px-3 py-2 mr-2">
+                <button id="update-count-button" class="test-button">
+                    Update Count
+                </button>
+            </div>
+        </div>
+        
+        <div class="mt-8 bg-gray-100 p-4 rounded">
+            <h3 class="text-xl font-semibold mb-2">Navigation Test</h3>
+            <p class="mb-4">Click the "View Details" link in the alert to test navigation to the Fleet Analysis section.</p>
+            <div id="navigation-result" class="font-mono bg-gray-800 text-white p-4 rounded">
+                No navigation action yet
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const showAlertButton = document.getElementById('show-alert-button');
+            const hideAlertButton = document.getElementById('hide-alert-button');
+            const alertContainer = document.getElementById('fleet-alert-container');
+            const alertCountElement = document.getElementById('fleet-alert-count');
+            const alertCountInput = document.getElementById('alert-count-input');
+            const updateCountButton = document.getElementById('update-count-button');
+            const navigationResult = document.getElementById('navigation-result');
+            
+            // Show alert
+            showAlertButton.addEventListener('click', function() {
+                alertContainer.classList.remove('hidden');
+                alertContainer.classList.add('pulse');
+            });
+            
+            // Hide alert
+            hideAlertButton.addEventListener('click', function() {
+                alertContainer.classList.add('hidden');
+                alertContainer.classList.remove('pulse');
+            });
+            
+            // Update alert count
+            updateCountButton.addEventListener('click', function() {
+                const count = alertCountInput.value;
+                alertCountElement.textContent = count;
+            });
+            
+            // Monitor navigation
+            document.addEventListener('click', function(e) {
+                // Check if the clicked element is the fleet alert link
+                if (e.target && e.target.closest('a[href="#fleet"]')) {
+                    e.preventDefault();
+                    navigationResult.textContent = 'Navigation to Fleet Analysis triggered at: ' + new Date().toLocaleTimeString();
+                    navigationResult.classList.add('bg-green-800');
+                    setTimeout(() => {
+                        navigationResult.classList.remove('bg-green-800');
+                    }, 2000);
+                }
+            });
+            
+            console.log('Fleet Alert Test page loaded');
+        });
+    </script>
+</body>
+</html>
