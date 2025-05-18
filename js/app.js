@@ -111,13 +111,32 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
+     * Helper function to join URL parts without double slashes
+     * @param {string} base - Base URL
+     * @param {string} path - Path to append
+     * @returns {string} Properly joined URL
+     */
+    function joinUrl(base, path) {
+        // Remove trailing slash from base if present
+        const cleanBase = base.endsWith('/') ? base.slice(0, -1) : base;
+        // Remove leading slash from path if present
+        const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+        return `${cleanBase}/${cleanPath}`;
+    }
+
+    /**
      * Fetch user data from API
      * @returns {Promise<Object>} User data object
      */
     async function fetchUserData() {
         try {
-            const userDetailsUrl = `${config.api.baseUrl}${config.api.endpoints.userDetails}`;
+            // Always use the proxy endpoint with full URL
+            const userDetailsUrl = 'http://localhost:3000/api/user/details/';
             console.log('Fetching user details from:', userDetailsUrl);
+            
+            // Log the token being used (first few characters for security)
+            const tokenPreview = token.substring(0, 10) + '...';
+            console.log('Using authorization token:', tokenPreview);
             
             const response = await fetch(userDetailsUrl, {
                 method: 'GET',
@@ -127,8 +146,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
+            console.log('User details response status:', response.status);
+            console.log('User details response headers:', response.headers);
+
             // Handle unauthorized response (invalid token)
             if (response.status === 401) {
+                console.error('Authentication failed: Unauthorized (401)');
                 // Clear invalid token
                 localStorage.removeItem(config.storage.authToken);
                 localStorage.removeItem(config.storage.username);
@@ -141,32 +164,50 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Handle other error responses
             if (!response.ok) {
-                throw new Error('Failed to load user data. Please try again.');
+                console.error(`API error: ${response.status} ${response.statusText}`);
+                throw new Error(`Failed to load user data (${response.status}). Please try again.`);
             }
 
             // Parse response with error handling
             let data;
             try {
                 const text = await response.text();
-                console.log('User details response:', text);
-                data = text ? JSON.parse(text) : {};
+                console.log('User details response text:', text);
+                
+                if (!text) {
+                    console.warn('Empty response received from user details endpoint');
+                    throw new Error('Empty response from server');
+                }
+                
+                data = JSON.parse(text);
+                console.log('Parsed user data:', data);
+                
+                if (!data || (Object.keys(data).length === 0)) {
+                    console.warn('Empty data object after parsing');
+                    throw new Error('Invalid user data format');
+                }
             } catch (parseError) {
                 console.error('JSON parse error:', parseError);
                 throw new Error('Invalid response from server. Please try again.');
             }
+            
             return data;
         } catch (error) {
             console.error('Error fetching user data:', error);
             
-            // For development/debugging: use placeholder data if API call fails
-            console.log('Using placeholder data instead');
-            const username = localStorage.getItem(config.storage.username) || 'User';
-            return {
-                user_name: username,
-                email: `${username.toLowerCase()}@example.com`,
-                role: 'user',
-                // Add any other placeholder data needed
-            };
+            // Try to get stored user data first (for offline scenarios)
+            const storedUserData = localStorage.getItem(config.storage.userData);
+            if (storedUserData) {
+                try {
+                    console.log('Using stored user data as fallback');
+                    return JSON.parse(storedUserData);
+                } catch (parseError) {
+                    console.error('Error parsing stored user data:', parseError);
+                }
+            }
+            
+            // If we reach here, we have no data - throw error to be handled by caller
+            throw new Error('Failed to load user data. Please check your connection and try again.');
         }
     }
 
@@ -180,11 +221,22 @@ document.addEventListener('DOMContentLoaded', () => {
             throw new Error('Invalid user data received.');
         }
 
+        console.log('Updating UI with user data:', userData);
+
         // Update user name and email in header
         userName.textContent = userData.user_name || 'User';
         userEmail.textContent = userData.email || '';
         mobileUserName.textContent = userData.user_name || 'User';
         mobileUserEmail.textContent = userData.email || '';
+
+        // Update dropdown user info
+        const dropdownUserName = document.getElementById('dropdown-user-name');
+        const dropdownUserEmail = document.getElementById('dropdown-user-email');
+        const dropdownUserPhone = document.getElementById('dropdown-user-phone');
+        
+        if (dropdownUserName) dropdownUserName.textContent = userData.user_name || 'User';
+        if (dropdownUserEmail) dropdownUserEmail.textContent = userData.email || '';
+        if (dropdownUserPhone) dropdownUserPhone.textContent = userData.phone_number || '(Not available)';
 
         // Update user details in profile section
         userFullName.textContent = userData.user_name || 'Not available';
