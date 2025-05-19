@@ -80,9 +80,3 @@ jobs:
           app-name: 'clientapp'
           slot-name: 'Production'
           package: .
-
-      - name: 'Set production environment variable'
-        uses: azure/CLI@v1
-        with:
-          inlineScript: |
-            az webapp config appsettings set --name clientapp --resource-group clientapp --settings NODE_ENV=production
