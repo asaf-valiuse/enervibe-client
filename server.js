@@ -11,22 +11,44 @@ const API_BASE_URL = process.env.API_BASE_URL || 'https://ev-api.valiuse.com/';
 const isProduction = process.env.NODE_ENV === 'production';
 
 // CORS configuration
-const corsOptions = {
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps, curl requests)
-    if (!origin) return callback(null, true);
-    
-    // Check if the origin is allowed
-    if (origin === 'http://localhost:3000' || origin === 'http://127.0.0.1:8080') {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
-};
+const corsOptions = isProduction ? 
+  // Production CORS settings - more permissive
+  {
+    origin: true, // Allow all origins in production
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+  } : 
+  // Development CORS settings - more restrictive
+  {
+    origin: function (origin, callback) {
+      console.log('DEBUG: CORS - Request origin:', origin);
+      
+      // Allow requests with no origin (like mobile apps, curl requests, or same-origin requests)
+      if (!origin) {
+        console.log('DEBUG: CORS - Allowing request with no origin');
+        return callback(null, true);
+      }
+      
+      // List of allowed origins for development
+      const allowedOrigins = [
+        'http://localhost:3000',
+        'http://127.0.0.1:8080',
+        'https://clientapp-gfh5bsgwfgasgthe.israelcentral-01.azurewebsites.net'
+      ];
+      
+      if (allowedOrigins.includes(origin)) {
+        console.log(`DEBUG: CORS - Allowing request from origin: ${origin}`);
+        callback(null, true);
+      } else {
+        console.log(`DEBUG: CORS - Blocking request from origin: ${origin}`);
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+  };
 
 // Apply CORS middleware
 app.use(cors(corsOptions));
