@@ -127,8 +127,8 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     async function fetchUserData() {
         try {
-            // Always use the proxy endpoint with full URL
-            const userDetailsUrl = 'http://localhost:3000/api/user/details/';
+            // Use the configured API endpoint
+            const userDetailsUrl = `${window.location.origin}/api/user/details/`;
             console.log('Fetching user details from:', userDetailsUrl);
             
             // Log the token being used (first few characters for security)

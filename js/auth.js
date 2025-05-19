@@ -34,8 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     async function verifyTokenAndRedirect(token) {
         try {
-            // Always use the proxy endpoint with full URL
-            const userDetailsUrl = 'http://localhost:3000/api/user/details/';
+            // Use the configured API endpoint
+            const userDetailsUrl = `${window.location.origin}/api/user/details/`;
             console.log('DEBUG: Verifying token by fetching user details from:', userDetailsUrl);
             console.log('DEBUG: Token being used (first 10 chars):', token.substring(0, 10) + '...');
             
@@ -139,8 +139,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Create request payload
         const requestPayload = { username, password };
-        // Always use the proxy endpoint with full URL
-        const loginUrl = 'http://localhost:3000/api/auth/login';
+        // Use the configured API endpoint
+        const loginUrl = `${window.location.origin}/api/auth/login`;
         
         console.log('Request payload:', JSON.stringify(requestPayload));
         console.log('Request URL:', loginUrl);
